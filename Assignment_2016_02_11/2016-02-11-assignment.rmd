@@ -1,3 +1,8 @@
+---
+output:
+  html_document:
+    keep_md: yes
+---
 # Statistical Rethinking Chapter 2, sections 2.1 - 2.3
 
 Name:
@@ -19,8 +24,7 @@ It means that when we toss the globe, 0.7 times we will get water under our fing
 ## 2M3
 
 
-
-```r
+```{r}
 PriorEarth = 0.5
 PriorMars = 0.5
 ProbLandEarth = 0.3 #the probability of getting land if you have earth
@@ -34,8 +38,7 @@ ProbEarthLand = 0.23
 
 
 ## 2M4
-
-```r
+```{r}
 bb = 2 #two ways for all black card to produce observation
 bw = 1 #one way for the black + white card to produce observation
 ww = 0 #the all white card could not produce observation
@@ -47,8 +50,7 @@ plausww = ww/sumways #plausibility of the card being all white is 0
 
 
 ##2M5
-
-```r
+```{r}
 bb = 4 #there are now 4 ways that a black/black card could give you black side (each side of each card counts as one way)
 bw = 1
 ww = 0 
@@ -59,14 +61,9 @@ probB = plaus[1]
 probB #probability that other side is black is 0.8
 ```
 
-```
-## [1] 0.8
-```
-
 
 ##2M6
-
-```r
+```{r}
 oldways = c(2,1,0) #the counts for 2M3
 newways = oldways*c(1,2,3) #weighting the counts
 plaus = newways/sum(newways)
@@ -74,13 +71,8 @@ probB = plaus[1]
 probB
 ```
 
-```
-## [1] 0.5
-```
-
 ##2M7
-
-```r
+```{r}
 bb = 6 #first card is bb and second card is ww has 4 ways (b1w1, b1w2, b2w1, b2w2) + second card is bw gives 2 ways (b1w, b2w)
 bw = 2 #first card is bw and second card is ww (bw1, bw2)
 ww = 0
@@ -90,30 +82,14 @@ probB = plaus[1]
 probB
 ```
 
-```
-## [1] 0.75
-```
-
 ##2H1
-
-```r
+```{r}
 priorPanda = c(0.5, 0.5) #each species is equally common
 LikelihoodPanda = c(dbinom(1, size = 1, prob = 0.1), dbinom(1, size = 1, prob = 0.2)) #the likelihoods of each panda species having twins
 AverageLikelihood = sum(priorPanda*LikelihoodPanda) #the average likelihood of having twins given an equal chance of being each species
 PosteriorPanda = (LikelihoodPanda*priorPanda)/AverageLikelihood #bayes theorem
-PosteriorPanda #so there's a 33% chance of being Panda 1 and a 66% chance of being Panda 2
-```
-
-```
-## [1] 0.3333333 0.6666667
-```
-
-```r
-#The probability of having twins is just the probability of being each species * the probability of that species having twins
-ProbTwins = sum(PosteriorPanda*LikelihoodPanda)
+PosteriorPanda 
+#so there's a 33% chance of being Panda 1 and a 66% chance of being Panda 2
+ProbTwins = sum(PosteriorPanda*LikelihoodPanda) #The probability of having twins is just the probability of being each species * the probability of that species having twins
 ProbTwins
-```
-
-```
-## [1] 0.1666667
 ```
