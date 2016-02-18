@@ -98,9 +98,9 @@ probB
 
 ```r
 priorPanda = c(0.5, 0.5) #each species is equally common
-LikelihoodPanda = c(dbinom(1, size = 1, prob = 0.1), dbinom(1, size = 1, prob = 0.2)) #the likelihoods of each panda species having twins
-AverageLikelihood = sum(priorPanda*LikelihoodPanda) #the average likelihood of having twins given an equal chance of being each species
-PosteriorPanda = (LikelihoodPanda*priorPanda)/AverageLikelihood #bayes theorem
+LikelihoodTwins = c(dbinom(1, size = 1, prob = 0.1), dbinom(1, size = 1, prob = 0.2)) #the likelihoods of each panda species having twins
+AverageLikelihood = sum(priorPanda*LikelihoodTwins) #the average likelihood of having twins given an equal chance of being each species
+PosteriorPanda = (LikelihoodTwins*priorPanda)/AverageLikelihood #bayes theorem
 PosteriorPanda 
 ```
 
@@ -110,10 +110,51 @@ PosteriorPanda
 
 ```r
 #so there's a 33% chance of being Panda 1 and a 66% chance of being Panda 2
-ProbTwins = sum(PosteriorPanda*LikelihoodPanda) #The probability of having twins is just the probability of being each species * the probability of that species having twins
+ProbTwins = sum(PosteriorPanda*LikelihoodTwins) #The probability of having twins is just the probability of being each species * the probability of that species having twins
 ProbTwins
 ```
 
 ```
 ## [1] 0.1666667
 ```
+
+##2H2
+
+```r
+PosteriorPanda[1] #the probability of being species A
+```
+
+```
+## [1] 0.3333333
+```
+
+
+##2H3
+
+```r
+PriorPanda = PosteriorPanda #from problem 2H1
+LikelihoodSingleton = c(0.9, 0.8) #the likelihood of each species only giving birth to one
+AverageLikelihoodSingleton = sum(PriorPanda*LikelihoodSingleton)
+PosteriorPanda = (LikelihoodSingleton*priorPanda)/AverageLikelihoodSingleton
+PosteriorPanda[1] #the likelihood of being species A
+```
+
+```
+## [1] 0.54
+```
+
+```r
+#could we have done this all in one step? Why doesn't it work this way?
+PriorPanda = c(0.5,0.5)
+LikelihoodPanda = c(dbinom(1, size=2, prob=0.1), dbinom(1, size=2, prob=0.2))
+AverageLikelihood = sum(PriorPanda*LikelihoodPanda)
+PosteriorPanda = (LikelihoodPanda*priorPanda)/AverageLikelihood #bayes theorem
+PosteriorPanda 
+```
+
+```
+## [1] 0.36 0.64
+```
+
+
+
