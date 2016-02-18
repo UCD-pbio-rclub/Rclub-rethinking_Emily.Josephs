@@ -1,3 +1,8 @@
+---
+output:
+  html_document:
+    keep_md: yes
+---
 # Statistical Rethinking Chapter 2, sections 2.1 - 2.3
 
 Name:
