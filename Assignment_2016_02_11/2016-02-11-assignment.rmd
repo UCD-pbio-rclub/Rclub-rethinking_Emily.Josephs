@@ -112,15 +112,23 @@ PosteriorPanda[1] #the likelihood of being species A
 PriorPanda = c(0.5,0.5)
 LikelihoodPanda = c(dbinom(1, size=2, prob=0.1), dbinom(1, size=2, prob=0.2))
 AverageLikelihood = sum(PriorPanda*LikelihoodPanda)
-PosteriorPanda = (LikelihoodPanda*priorPanda)/AverageLikelihood #bayes theorem
-PosteriorPanda[1]
+PosteriorPandaAll = (LikelihoodPanda*priorPanda)/AverageLikelihood #bayes theorem
+PosteriorPandaAll[1]
 ```
 
 ##2H4
 ```{r}
-# test only
+#test only
 PriorPanda = c(0.5, 0.5)
 LikelihoodTest = c(0.8, 0.2) #this is explained vaguely in the text
+AvgTest = sum(PriorPanda*LikelihoodTest)
+PosteriorPandaTest = (PriorPanda*LikelihoodTest)/AvgTest
+PosteriorPandaTest[1]
+
+#test and births
+PriorPanda = PosteriorPanda
+PosteriorPandaAll = (PriorPanda*LikelihoodTest)/AvgTest
+PosteriorPandaAll[1]
 
 ```
 

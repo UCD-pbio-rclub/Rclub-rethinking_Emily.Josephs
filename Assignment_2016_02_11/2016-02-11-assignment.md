@@ -144,17 +144,41 @@ PosteriorPanda[1] #the likelihood of being species A
 ```
 
 ```r
-#could we have done this all in one step? Why doesn't it work this way?
+#could we have done this all in one step? Why don't our answers agree?
 PriorPanda = c(0.5,0.5)
 LikelihoodPanda = c(dbinom(1, size=2, prob=0.1), dbinom(1, size=2, prob=0.2))
 AverageLikelihood = sum(PriorPanda*LikelihoodPanda)
-PosteriorPanda = (LikelihoodPanda*priorPanda)/AverageLikelihood #bayes theorem
-PosteriorPanda 
+PosteriorPandaAll = (LikelihoodPanda*priorPanda)/AverageLikelihood #bayes theorem
+PosteriorPandaAll[1]
 ```
 
 ```
-## [1] 0.36 0.64
+## [1] 0.36
 ```
 
+##2H4
 
+```r
+#test only
+PriorPanda = c(0.5, 0.5)
+LikelihoodTest = c(0.8, 0.2) #this is explained vaguely in the text
+AvgTest = sum(PriorPanda*LikelihoodTest)
+PosteriorPandaTest = (PriorPanda*LikelihoodTest)/AvgTest
+PosteriorPandaTest[1]
+```
+
+```
+## [1] 0.8
+```
+
+```r
+#test and births
+PriorPanda = PosteriorPanda
+PosteriorPandaAll = (PriorPanda*LikelihoodTest)/AvgTest
+PosteriorPandaAll[1]
+```
+
+```
+## [1] 0.864
+```
 
