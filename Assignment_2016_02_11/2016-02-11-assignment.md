@@ -21,6 +21,7 @@ It means that when we toss the globe, 0.7 times we will get water under our fing
 
 
 ```r
+setwd("~/Documents/Rclub-rethinking_Emily.Josephs/Assignment_2016_02_11/")
 PriorEarth = 0.5
 PriorMars = 0.5
 ProbLandEarth = 0.3 #the probability of getting land if you have earth
@@ -135,16 +136,16 @@ PosteriorPanda[1] #the probability of being species A
 PriorPanda = PosteriorPanda #from problem 2H1
 LikelihoodSingleton = c(0.9, 0.8) #the likelihood of each species only giving birth to one
 AverageLikelihoodSingleton = sum(PriorPanda*LikelihoodSingleton)
-PosteriorPanda = (LikelihoodSingleton*priorPanda)/AverageLikelihoodSingleton
+PosteriorPanda = (LikelihoodSingleton*PriorPanda)/AverageLikelihoodSingleton
 PosteriorPanda[1] #the likelihood of being species A
 ```
 
 ```
-## [1] 0.54
+## [1] 0.36
 ```
 
 ```r
-#could we have done this all in one step? Why don't our answers agree?
+#could we have done this all in one step?=
 PriorPanda = c(0.5,0.5)
 LikelihoodPanda = c(dbinom(1, size=2, prob=0.1), dbinom(1, size=2, prob=0.2))
 AverageLikelihood = sum(PriorPanda*LikelihoodPanda)
@@ -179,6 +180,5 @@ PosteriorPandaAll[1]
 ```
 
 ```
-## [1] 0.864
+## [1] 0.576
 ```
-
