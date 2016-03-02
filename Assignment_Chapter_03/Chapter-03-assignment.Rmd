@@ -89,21 +89,96 @@ abline(v=HPDI(samples, prob=0.9)[2], col = "darkred", lwd=2)
 
 ```
 
-
-_STOP AFTER 3M2 FOR 02/25 ASSIGNMENT_
-
 ## 3M3
+```{r}
+dummy_w <- rbinom(1e5, size=15, prob=samples)
+table(dummy_w)[9]/1e5
+```
+
 
 ## 3M4
+```{r}
+dummy_prob = dummy_w/1e5
+p_grid <- seq(from=0, to=1, length.out=1000)
+prior <- rep(1,1000) #flat prior
+likelihood <- dbinom(6, size=9, prob=dummy_prob)
+posterior = likelihood*prior
+
+
+```
 
 ## 3M5
+```{r}
+p_grid <- seq( from=0 , to=1 , length.out=1000 )
+prior <- c(rep( 0 , 500 ), rep(1,500))
+likelihood <- dbinom( 8 , size=15 , prob=p_grid )
+posterior <- likelihood * prior
+posterior <- posterior / sum(posterior)
+samples2 <- sample( p_grid , prob=posterior , size=1e5 , replace=TRUE )
+hist(samples2, xlim=c(0,1), col="darkgray", border="white")
+HPDI(samples2, prob=0.9)
+abline(v=HPDI(samples2, prob=0.9), col="darkred", lwd=2)
+
+dummy_w2 <- rbinom(1e5, size=15, prob=samples2)
+table(dummy_w2)[7]/1e5
+hist(dummy_w2, col="darkgray", border="white", xlab="number of water samples")
+
+#checking it at 0.7???
+
+```
+
 
 ## 3H1
+```{r}
+data(homeworkch3)
+p_grid <- seq( from=0 , to=1 , length.out=1000 )
+prior <- rep( 1 , 1000 )
+probbirth1 = sum(birth1)/length(birth1)
+probbirth2 = sum(birth2)/length(birth2)
+probboy = probbirth1/2 + probbirth2/2
+
+likelihood <- dbinom( 111 , size=200 , prob=p_grid )
+posterior <- likelihood * prior
+posterior <- posterior / sum(posterior)
+loss <- sapply(p_grid, function(d) sum(posterior*abs(d-p_grid)))
+p_grid[which.min(loss)]
+```
+
 
 ## 3H2
+```{r}
 
+samples <- sample(p_grid, size=1e4, replace=TRUE, prob = posterior)
+HPDI(samples,prob=0.5)
+HPDI(samples,prob=0.89)
+HPDI(samples,prob=0.97)
+
+```
 ## 3H3
+```{r}
+reps = rbinom(1e4, 200, prob=samples) 
+dens(reps)
+abline(v=111, col="darkred", lwd=2)
+```
 
 ## 3H4
+```{r}
+sum(birth1)
+reps = rbinom(1e4, 100, prob=samples)
+dens(reps)
+abline(v=sum(birth1), col="darkred",lwd=2)
+
+```
+The model looks bad now
 
 ## 3H5
+```{r}
+girlsfirst = birth2[which(birth1 ==0)]
+BafterG = sum(girlsfirst)
+reps = rbinom(1e4, 49, prob=samples)
+dens(reps)
+abline(v=BafterG, col="darkred", lwd=2)
+table(reps)[29]/1e4
+
+```
+It looks like the two births are not independent
