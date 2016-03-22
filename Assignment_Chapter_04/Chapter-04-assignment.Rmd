@@ -1,17 +1,29 @@
 # Statistical Rethinking Chapter 4 problems
 
-__Name:__
+__Name:__Emily Josephs
 
 
 # For 03/17/16
 
 ## 4E1
 
+y<sub>i</sub> is the likelihood
+
 ## 4E2
+
+There are two parameters in the posterior
 
 ## 4E3
 
+Posterior = (Likelihood x Prior)/Average Likelihood
+$$Pr(\mu,\sigma|h) = \frac{\prod_{i}Normal(h_{i}|\mu,\sigma)Normal(\mu|0,10)Uniform(\sigma|0,10)}{average likelihood}$$
+
 ## 4M1
+```{r}
+
+
+```
+
 
 ## 4M2
 
