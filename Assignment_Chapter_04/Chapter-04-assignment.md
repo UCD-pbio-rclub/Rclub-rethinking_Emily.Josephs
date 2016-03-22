@@ -1,8 +1,3 @@
----
-output:
-  html_document:
-    keep_md: yes
----
 # Statistical Rethinking Chapter 4 problems
 
 __Name:__Emily Josephs
@@ -24,26 +19,26 @@ Posterior = (Likelihood x Prior)/Average Likelihood
 $$Pr(\mu,\sigma|h) = \frac{\prod_{i}Normal(h_{i}|\mu,\sigma)Normal(\mu|0,10)Uniform(\sigma|0,10)}{average likelihood}$$
 
 ## 4M1
-```{r, message=FALSE}
+
+```r
 dummy_mu <- rnorm(1e4, mean=0, sd=10)
 dummy_sigma <- runif(1e4, min=0, max=10)
 dummy_heights = rnorm(1e4, mean=dummy_mu, sd=dummy_sigma)
 
 library(rethinking)
 dens(dummy_heights)
-
-
 ```
 
+![](Chapter-04-assignment_files/figure-html/unnamed-chunk-1-1.png) 
+
 ## 4M2
-```{r}
+
+```r
 mylist <-alist(
 height ~ dnorm(mu,sigma),
 mu ~ dnorm(0,10),
 sigma ~ dunif (0,10)
 )
-
-
 ```
 
 # For 03/24/16
