@@ -1,8 +1,3 @@
----
-output:
-  html_document:
-    keep_md: yes
----
 # Statistical Rethinking Chapter 4 problems
 
 __Name:__Em
@@ -20,8 +15,7 @@ D<sub>a</sub> = animal diversity
 D<sub>p</sub> = plant diversity
 l = latitude
 
-D<sub>a</sub> ~ Normal(μ, σ)
-μ = α
+D<sub>i</sub> ~ Normal(μ, σ)
 
 ## 5M1
 
