@@ -47,10 +47,13 @@ D<sub>r</sub> ~ Normal(μ, σ)
 I'm not sure if this model would actually tell you anything?
 
 ## 5M4
-```{r}
+```{r, include=FALSE}
 library(rethinking)
 data(WaffleDivorce)
 d <- WaffleDivorce
+```
+
+```{r}
 
 lds <- read.csv('~/Documents/Rclub-rethinking_Emily.Josephs/Assignment_Chapter_05/lds-stats.csv',header=T)
 lds$p_lds = lds$Membership/lds$Population
@@ -59,6 +62,8 @@ sd(d$MedianAgeMarriage)
 d$Marriage.s <- (d$Marriage - mean(d$Marriage))/sd(d$Marriage)
 
 m <- merge(lds, d, by = "Location")
+
+plot(m$p_lds, m$Divorce) #this is not promising
 
 #not standardized
 ml <- map(
