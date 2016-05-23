@@ -1,5 +1,5 @@
 ---
-title: "Chapter-05-part2-assignment"
+title: "Chapter-06-assignment"
 output: 
   html_document: 
     keep_md: yes
@@ -42,6 +42,16 @@ entropy
 
 ```
 
+## 6E4
+
+```{r}
+probs = c(1/3,1/3,1/3)
+entropy = sum(fentropy(probs))
+entropy
+
+```
+
+
 ## 6M1 
 * AIC = training deviance + the number of free parameters. This only is reliable if 1) there are flat priors   (or it doesn't  matter because the likelihood is strong enough that the priors are unimportant) 2) the postior distribution is multivariate normal, and 3) the sample size is much larger than the number of parameters being estimated.
 
@@ -82,15 +92,130 @@ dnorm( cars$dist , mu , post$sigma[s] , log=TRUE )  #getting the log-likelihood 
 ##6M3
 
 
-
 ##6M4
 
 
-## 6E4
+## 6H1
 
-```{r, eval=FALSE, echo=FALSE}
-probs = c(1/3,1/3,1/3)
-entropy = sum(fentropy(probs))
-entropy
+```{r}
+data(Howell1)
+d <- Howell1
+d$unnormage <- d$age
+d$age <- (d$age - mean(d$age))/sd(d$age)
+set.seed(1000)
+i <- sample(1:nrow(d), size=nrow(d)/2)
+d1 <- d[i,] #for model fitting
+d2 <- d[-i,] #for evaluating model
+
+m1 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b*age,
+a ~ dnorm(mean(height),25),
+b ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m2 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m3 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m4 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age + b4*age*age*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+b4 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m5 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age + b4*age*age*age*age + b5*age*age*age*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+b4 ~ dnorm(0,10),
+b5 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m6 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age + b4*age*age*age*age + b5*age*age*age*age*age + b6*age^6,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+b4 ~ dnorm(0,10),
+b5 ~ dnorm(0,10),
+b6 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+plot(d1$height, d1$age)
+
+#compare models with WAIC
+mods <- c(m1,m2,m3,m4,m5,m6)
+waics = sapply(mods, WAIC)
+plot(seq(1,6), waics, xlab = "number of terms in polymomial", ylab = "WAIC")
+compare(m1,m2,m3,m4,m5,m6)
 
 ```
+
+## 6H2
+
+```{r}
+range(d1$age)
+agesamp = data.frame(age=seq(range(d1$age)[1],range(d1$age)[2],by = 0.1))
+x=m1
+plotmods = function(x){
+predic <- link(x, data = agesamp) #code from 6.29
+mu <- apply(predic, 2, mean)
+mu.PI <- apply(predic, 2, PI, prob=0.97)
+plot(d1$age, d1$height, col = "lightgray")
+lines(agesamp$age, mu, lwd=2)
+lines(agesamp$age, mu.PI[1,], lty=2)
+lines(agesamp$age, mu.PI[2,], lty=2)
+}
+
+sapply(mods,plotmods)
+```
+
+Having additional terms allows the model to capture the levelling off that happens with age and height, and so make better predictions.
+
+## 6H3
+
+
+## 6H4
+
+
+## 6H5
+
+
+## 6H6
+
+

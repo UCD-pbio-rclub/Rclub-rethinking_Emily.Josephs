@@ -1,4 +1,4 @@
-# Chapter-05-part2-assignment
+# Chapter-06-assignment
 # Statistical Rethinking Chapter 6 problems
 
 __Name:__Emily Josephs
@@ -46,6 +46,20 @@ entropy
 ## [1] 1.376227
 ```
 
+## 6E4
+
+
+```r
+probs = c(1/3,1/3,1/3)
+entropy = sum(fentropy(probs))
+entropy
+```
+
+```
+## [1] 1.098612
+```
+
+
 ## 6M1 
 * AIC = training deviance + the number of free parameters. This only is reliable if 1) there are flat priors   (or it doesn't  matter because the likelihood is strong enough that the priors are unimportant) 2) the postior distribution is multivariate normal, and 3) the sample size is much larger than the number of parameters being estimated.
 
@@ -87,10 +101,372 @@ dnorm( cars$dist , mu , post$sigma[s] , log=TRUE )  #getting the log-likelihood 
 ##6M3
 
 
-
 ##6M4
 
 
-## 6E4
+## 6H1
+
+
+```r
+data(Howell1)
+d <- Howell1
+d$unnormage <- d$age
+d$age <- (d$age - mean(d$age))/sd(d$age)
+set.seed(1000)
+i <- sample(1:nrow(d), size=nrow(d)/2)
+d1 <- d[i,] #for model fitting
+d2 <- d[-i,] #for evaluating model
+
+m1 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b*age,
+a ~ dnorm(mean(height),25),
+b ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m2 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m3 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m4 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age + b4*age*age*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+b4 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m5 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age + b4*age*age*age*age + b5*age*age*age*age*age,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+b4 ~ dnorm(0,10),
+b5 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+m6 <- map(
+alist(
+height ~ dnorm(mu,sigma),
+mu <- a + b1*age + b2*age*age + b3*age*age*age + b4*age*age*age*age + b5*age*age*age*age*age + b6*age^6,
+a ~ dnorm(mean(height),25),
+b1 ~ dnorm(0,10),
+b2 ~ dnorm(0,10),
+b3 ~ dnorm(0,10),
+b4 ~ dnorm(0,10),
+b5 ~ dnorm(0,10),
+b6 ~ dnorm(0,10),
+sigma ~ dunif(0,30)
+) , data=d1 )
+
+plot(d1$height, d1$age)
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+```r
+#compare models with WAIC
+mods <- c(m1,m2,m3,m4,m5,m6)
+waics = sapply(mods, WAIC)
+```
+
+```
+## Constructing posterior predictions
+```
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+```
+## Constructing posterior predictions
+```
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+```
+## Constructing posterior predictions
+```
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+```
+## Constructing posterior predictions
+```
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+```
+## Constructing posterior predictions
+```
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+```
+## Constructing posterior predictions
+```
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+```r
+plot(seq(1,6), waics, xlab = "number of terms in polymomial", ylab = "WAIC")
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
+
+```r
+compare(m1,m2,m3,m4,m5,m6)
+```
+
+```
+##      WAIC pWAIC dWAIC weight    SE   dSE
+## m4 1926.2   5.7   0.0   0.54 25.44    NA
+## m5 1927.7   6.4   1.5   0.26 25.64  0.43
+## m6 1928.1   7.2   1.9   0.21 25.17  1.84
+## m3 1952.8   5.7  26.6   0.00 24.34 11.09
+## m2 2149.9   5.2 223.7   0.00 22.85 26.79
+## m1 2395.5   3.5 469.3   0.00 23.19 31.10
+```
+
+## 6H2
+
+
+```r
+range(d1$age)
+```
+
+```
+## [1] -1.41440  2.60548
+```
+
+```r
+agesamp = data.frame(age=seq(range(d1$age)[1],range(d1$age)[2],by = 0.1))
+x=m1
+plotmods = function(x){
+predic <- link(x, data = agesamp) #code from 6.29
+mu <- apply(predic, 2, mean)
+mu.PI <- apply(predic, 2, PI, prob=0.97)
+plot(d1$age, d1$height, col = "lightgray")
+lines(agesamp$age, mu, lwd=2)
+lines(agesamp$age, mu.PI[1,], lty=2)
+lines(agesamp$age, mu.PI[2,], lty=2)
+}
+
+sapply(mods,plotmods)
+```
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-7-3.png)<!-- -->
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-7-4.png)<!-- -->
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-7-5.png)<!-- -->
+
+```
+## [ 100 / 1000 ]
+[ 200 / 1000 ]
+[ 300 / 1000 ]
+[ 400 / 1000 ]
+[ 500 / 1000 ]
+[ 600 / 1000 ]
+[ 700 / 1000 ]
+[ 800 / 1000 ]
+[ 900 / 1000 ]
+[ 1000 / 1000 ]
+```
+
+![](Chapter-06-assignment_files/figure-html/unnamed-chunk-7-6.png)<!-- -->
+
+```
+## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL
+## 
+## [[4]]
+## NULL
+## 
+## [[5]]
+## NULL
+## 
+## [[6]]
+## NULL
+```
+
+Having additional terms allows the model to capture the levelling off that happens with age and height, and so make better predictions.
+
+## 6H3
+
+
+## 6H4
+
+
+## 6H5
+
+
+## 6H6
 
 
