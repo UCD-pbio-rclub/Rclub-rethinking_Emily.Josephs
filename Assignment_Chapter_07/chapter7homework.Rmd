@@ -35,11 +35,125 @@ The Bpf term specifies whether the friends' beliefs matter or not.
 
 ##7M1
 
+```{r, include=FALSE, eval=FALSE}
+library(rethinking)
+data(tulips)
+d <- tulips
+str(d)
+m7.6 <- map(
+  alist(
+    blooms ~ dnorm(mu,sigma),
+    mu <- a + bW*water + bS*shade,
+    a ~ dnorm(0,100),
+    bW ~ dnorm(0,100),
+    bS ~ dnorm(0,100),
+    sigma ~ dunif(0,100)
+  ), data=d, method="Nelder-Mead", control=list(maxit=1e4))
+
+m7.7 <- map(
+  alist(
+    blooms ~ dnorm(mu,sigma),
+    mu <- a + bW*water + bS*shade + bWS*water*shade,
+    a ~ dnorm(0,100),
+    bW ~ dnorm(0,100),
+    bS ~ dnorm(0,100),
+    bWS ~ dnorm(0,100),
+    sigma ~ dunif(0,100)
+  ), data=d, method="Nelder-Mead", control=list(maxit=1e4))
+
+coeftab(m7.6, m7.7)  
+precis(m7.6)
+precis(m7.7)
+compare(m7.6, m7.7)
+
+d$shade.c <- d$shade - mean(d$shade)
+d$water.c <- d$water - mean(d$water)
+
+
+m7.8 <- map(
+  alist(
+    blooms ~ dnorm(mu,sigma),
+    mu <- a + bW*water.c + bS*shade.c,
+    a ~ dnorm(0,100),
+    bW ~ dnorm(0,100),
+    bS ~ dnorm(0,100),
+    sigma ~ dunif(0,100)
+  ), data=d, start=list(a=mean(d$blooms), bW=0, bS = 0, sigma=sd(d$blooms))
+  )
+
+m7.9 <- map(
+  alist(
+    blooms ~ dnorm(mu,sigma),
+    mu <- a + bW*water.c + bS*shade.c + bWS*water.c*shade.c,
+    a ~ dnorm(0,100),
+    bW ~ dnorm(0,100),
+    bS ~ dnorm(0,100),
+    bWS ~ dnorm(0,100),
+    sigma ~ dunif(0,100)
+  ), data=d, start=list(a=mean(d$blooms), bW=0, bS = 0, sigma=sd(d$blooms)))
+
+coeftab(m7.8, m7.9)
+precis(m7.9)
+#bWS is negative because water and shade have opposite effects on blooms
+
+par(mfrow=c(1,3))
+
+shade.seq <- -1:1
+for (w in -1:1){
+  dt <- d[d$water.c == w,]
+  plot(blooms ~ shade.c, data=dt, col=rangi2, main=paste("water.c =",w), xaxp = c(-1,1,2), ylim=c(0,362), xlab = "shade (centered)")
+  mu <- link(m7.9, data=data.frame(water.c=w, shade.c=shade.seq))
+  mu.mean <- apply(mu,2,mean)
+  mu.PI <- apply(mu, 2, PI, prob = 0.97)
+  lines(shade.seq, mu.mean)
+  lines(shade.seq, mu.PI[1,], lty=2)
+  lines(shade.seq, mu.PI[2,], lty=2)
+  }
+
+```
+
+There is clearly an interaction between temperature, water, and shade.
 
 
 ##7M2
 
+```{r, eval=FALSE}
+blooms ~ a + bW*water + bS*shade + bWS*water*shade + bWST*temp*water*shade 
+
+When temp is cool, temp=0. When temp is warm, temp = 1 and bWST*water*shade is equal to the sum of the other terms times 1.
+```
+
+
 ##7M3
+
+I think the interaction here is that ravens can only survive if wolves are there. So if you have 100 habitats and 50 of them have wolves:
+
+```{r}
+library(rethinking)
+wolves = c(rep(0,50), rep(1,50))
+foodquality = rnorm(100)
+wolves.c = wolves - mean(wolves)
+food.c = foodquality - mean(foodquality)
+
+d = data.frame("wolves.c" = wolves.c, "food.c" = food.c)
+d$ravens = d$food.c*(d$wolves.c + 0.5)
+
+mr <- map(
+  alist(
+    ravens ~ dnorm(mu,sigma),
+    mu <- a + bF*food.c + bW*wolves.c,
+    a ~ dnorm(0,100),
+    bF ~ dnorm(0,100),
+    bW ~ dnorm(0,100),
+    #bWF ~ dnorm(0,100),
+    sigma ~ dunif(0,100)
+  ), data=d,  method="Nelder-Mead", control=list(maxit=1e4))
+
+coeftab(mr)
+precis(mr)
+```
+
+I think it could be linear if higher wolf populations increased the amount of food available to the ravens. However, I made it binary in my hypothetical dataset
 
 ##7H1
 
