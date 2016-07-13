@@ -9,6 +9,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(rethinking)
+set.seed(10)
 ```
 
 ##7E1
@@ -126,40 +128,192 @@ When temp is cool, temp=0. When temp is warm, temp = 1 and bWST*water*shade is e
 
 ##7M3
 
-I think the interaction here is that ravens can only survive if wolves are there. So if you have 100 habitats and 50 of them have wolves:
+So, I think this biological interaction could be linear if raven population = wolf population + amount of food. However, the way it's described it seems like there's some sort of multiplicative thing happening since if there are no wolves, there are no ravens, such that raven population = wolf population * amount of food.
 
-```{r}
-library(rethinking)
-wolves = c(rep(0,50), rep(1,50))
-foodquality = rnorm(100)
-wolves.c = wolves - mean(wolves)
-food.c = foodquality - mean(foodquality)
 
-d = data.frame("wolves.c" = wolves.c, "food.c" = food.c)
-d$ravens = d$food.c*(d$wolves.c + 0.5)
+```{r, eval=F, include=F}
+#wolfCount = round(rnorm(100)*50)+150
+#hist(wolfCount, col="darkgray", border="white", breaks=20)
+wolfCount = rnorm(100)
+foodQuality = runif(100,0,1)
+hist(foodQuality, col="darkgray", border="white", breaks=20)
+ravenCount = wolfCount*foodQuality
+hist(ravenCount, col="darkgray", border="white", breaks=20)
+
+d = data.frame(wolfCount,foodQuality,ravenCount)
 
 mr <- map(
   alist(
-    ravens ~ dnorm(mu,sigma),
-    mu <- a + bF*food.c + bW*wolves.c,
+    ravenCount ~ dnorm(mu,sigma),
+    mu <- a + bF*foodQuality + bW*wolfCount + bWF*foodQuality*wolfCount,
     a ~ dnorm(0,100),
     bF ~ dnorm(0,100),
     bW ~ dnorm(0,100),
-    #bWF ~ dnorm(0,100),
+    bWF ~ dnorm(0,100),
     sigma ~ dunif(0,100)
   ), data=d,  method="Nelder-Mead", control=list(maxit=1e4))
 
 coeftab(mr)
 precis(mr)
+
 ```
 
-I think it could be linear if higher wolf populations increased the amount of food available to the ravens. However, I made it binary in my hypothetical dataset
-
+```
 ##7H1
+
+```{r}
+data(tulips)
+d <- tulips
+
+d$bed_id <- coerce_index(d$bed)
+d$shade.c <- d$shade - mean(d$shade)
+d$water.c <- d$water - mean(d$water)
+
+m7.10 <- map(
+  alist(
+    blooms ~ dnorm(mu,sigma),
+    mu <- a + bW*water.c + bS*shade.c + bWS*water.c*shade.c + bB*bed_id,
+    a ~ dnorm(0,100),
+    bW ~ dnorm(0,100),
+    bS ~ dnorm(0,100),
+    bB ~ dnorm(0,100),
+    bWS ~ dnorm(0,100),
+    sigma ~ dunif(0,100)
+  ), data=d, start=list(a=mean(d$blooms), bW=0, bS = 0, bB = 0,sigma=sd(d$blooms)))
+
+precis(m7.10)
+
+```
 
 ##7H2
 
+
+```{r}
+m7.9 <- map(
+  alist(
+    blooms ~ dnorm(mu,sigma),
+    mu <- a + bW*water.c + bS*shade.c + bWS*water.c*shade.c,
+    a ~ dnorm(0,100),
+    bW ~ dnorm(0,100),
+    bS ~ dnorm(0,100),
+    bWS ~ dnorm(0,100),
+    sigma ~ dunif(0,100)
+  ), data=d, start=list(a=mean(d$blooms), bW=0, bS = 0, sigma=sd(d$blooms)))
+
+coeftab(m7.9, m7.10)
+
+compare(m7.9, m7.10)
+```
+
+Bed has a positive affect on the number of blooms, but it doesn't seem like this affects the coefficients for any of the other variables.
+
 ##7H3
+
+```{r}
+data(rugged)
+d <- rugged[ complete.cases(rugged$rgdppc_2000) , ]
+d$loggdp = log(d$rgdppc_2000)
+
+m.full <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged + bAR*rugged*cont_africa + bA*cont_africa,
+a ~ dnorm(0,100),
+bA ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+bAR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=d,  start=list(a=mean(d$loggdp), bA=0, bR = 0, bAR=0,sigma=sd(d$loggdp)))
+
+precis(m.full)
+
+noSey = d[d$country != "Seychelles",]
+
+m.noSey <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged + bAR*rugged*cont_africa + bA*cont_africa,
+a ~ dnorm(0,100),
+bA ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+bAR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=noSey,  start=list(a=mean(d$loggdp), bA=0, bR = 0, bAR=0,sigma=sd(d$loggdp)))
+
+precis(m.noSey)
+
+coeftab(m.full, m.noSey)
+```
+
+a) It still seems like the effect of ruggedness depends on continent and the relationship hasn't changed that much.
+
+
+```{r}
+par(mfrow=c(2,2))
+rugged.seq = seq(0,7, by = 0.5)
+
+for ( w in 0:1 ) {
+dt <- d[d$cont_africa==w,]
+plot( loggdp ~ rugged , data=dt , col=rangi2 ,
+main=paste("cont_africa =",w, ", all data") , ylim=c(5,12) , xlim = c(0,7),xlab="ruggedness" )
+mu <- link( m.full , data=data.frame(cont_africa=w,rugged=rugged.seq) )
+mu.mean <- apply( mu , 2 , mean )
+mu.PI <- apply( mu , 2 , PI , prob=0.97 )
+lines( rugged.seq , mu.mean )
+lines( rugged.seq , mu.PI[1,] , lty=2 )
+lines( rugged.seq , mu.PI[2,] , lty=2 )
+}
+
+for ( w in 0:1 ) {
+dt <- d[noSey$cont_africa==w,]
+plot( loggdp ~ rugged , data=dt , col=rangi2 ,
+main=paste("cont_africa =",w, ", no Seychelles") , ylim=c(5,12) , xlim = c(0,7),xlab="ruggedness" )
+mu <- link( m.noSey , data=data.frame(cont_africa=w,rugged=rugged.seq) )
+mu.mean <- apply( mu , 2 , mean )
+mu.PI <- apply( mu , 2 , PI , prob=0.97 )
+lines( rugged.seq , mu.mean )
+lines( rugged.seq , mu.PI[1,] , lty=2 )
+lines( rugged.seq , mu.PI[2,] , lty=2 )
+}
+```
+
+b) the effect of ruggedness still depends on continent, but the affect in Africa seems a bit weaker.
+
+```{r}
+m.noSey.1 <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=noSey,  start=list(a=mean(d$loggdp), bR = 0, sigma=sd(d$loggdp)))
+
+m.noSey.2 <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged + bA*cont_africa,
+a ~ dnorm(0,100),
+bA ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=noSey,  start=list(a=mean(d$loggdp), bA=0, bR = 0, sigma=sd(d$loggdp)))
+
+
+m.noSey.3 <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged + bAR*rugged*cont_africa + bA*cont_africa,
+a ~ dnorm(0,100),
+bA ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+bAR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=noSey,  start=list(a=mean(d$loggdp), bA=0, bR = 0, bAR=0,sigma=sd(d$loggdp)))
+
+compare(m.noSey.1, m.noSey.2, m.noSey.3)
+
+```
 
 ##7H4
 
