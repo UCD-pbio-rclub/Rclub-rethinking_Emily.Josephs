@@ -291,6 +291,49 @@ lines( rugged.seq , mu.PI[2,] , lty=2 )
 
 b) the effect of ruggedness still depends on continent, but the affect in Africa seems a bit weaker.
 
+
+```r
+m.noSey.1 <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=noSey,  start=list(a=mean(d$loggdp), bR = 0, sigma=sd(d$loggdp)))
+
+m.noSey.2 <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged + bA*cont_africa,
+a ~ dnorm(0,100),
+bA ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=noSey,  start=list(a=mean(d$loggdp), bA=0, bR = 0, sigma=sd(d$loggdp)))
+
+
+m.noSey.3 <- map(
+alist(
+loggdp ~ dnorm(mu,sigma),
+mu <- a + bR*rugged + bAR*rugged*cont_africa + bA*cont_africa,
+a ~ dnorm(0,100),
+bA ~ dnorm(0,100),
+bR ~ dnorm(0,100),
+bAR ~ dnorm(0,100),
+sigma ~ dunif(0,100)
+),data=noSey,  start=list(a=mean(d$loggdp), bA=0, bR = 0, bAR=0,sigma=sd(d$loggdp)))
+
+compare(m.noSey.1, m.noSey.2, m.noSey.3)
+```
+
+```
+##            WAIC pWAIC dWAIC weight    SE   dSE
+## m.noSey.3 463.7   4.8   0.0   0.75 15.36    NA
+## m.noSey.2 466.0   3.9   2.2   0.25 14.36  3.97
+## m.noSey.1 536.1   2.6  72.4   0.00 13.40 15.90
+```
+
 ##7H4
 
 
