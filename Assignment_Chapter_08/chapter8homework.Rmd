@@ -1,0 +1,21 @@
+---
+title: "chapter8homework"
+author: "em"
+date: "July 13, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, eval=F, include=F}
+
+```
+
+##8E1
+
+Themetropolis algorithm requires that the proposal distribution is symmetric.
+
+##8E2
+Gibbs sampling is more efficient because of the conjugate pairs of priors and likelihoods, which means that there is an analytical solution for the paramter posterior distributions. 
