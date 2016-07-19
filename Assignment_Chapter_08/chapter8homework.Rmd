@@ -2,15 +2,52 @@
 title: "chapter8homework"
 author: "em"
 date: "July 13, 2016"
-output: html_document
+output:
+  html_document:
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 ```{r, eval=F, include=F}
+library(rethinking)
+data(rugged)
+d <- rugged
+d$log_gdp <- log(d$rgdppc_2000)
+dd <- d[ complete.cases(d$rgdppc_2000) , ]
 
+m8.1 <- map(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dunif(0,10)
+) ,
+data=dd )
+precis(m8.1)
+
+dd.trim <- dd[ , c("log_gdp","rugged","cont_africa") ]
+str(dd.trim)
+
+m8.1stan <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dcauchy(0,2)
+) ,
+data=dd.trim )
+
+precis(m8.1stan)
 ```
 
 ##8E1
@@ -19,3 +56,221 @@ Themetropolis algorithm requires that the proposal distribution is symmetric.
 
 ##8E2
 Gibbs sampling is more efficient because of the conjugate pairs of priors and likelihoods, which means that there is an analytical solution for the paramter posterior distributions. 
+
+##8E3
+
+The Hamiltonian Monte Carlo can't handle non-continuous parameters
+
+##8E4
+
+The effective number of samples (n-eff) estimates the number of independent samples of the posterior distribution. This is not the same as the actual number of samples because Markov chains are autocorrelated. Figure 8.5 and code 8.14 show an example where the Markov chain ranges over really extreme values, so n-eff is quite small because when the chain is so far off from the mean, each value is similar to the one before it, and not independent
+
+##8E5
+
+Rhat should approach 1
+
+##8E6
+
+Not sure how to sketch here, but the trace plot should be relatively uniform and dense while a malfunctioning Markov chain will be skewed towards extremes.
+
+##8M1
+
+```{r}
+library(rethinking)
+data(rugged)
+d <- rugged
+d$log_gdp <- log(d$rgdppc_2000)
+dd <- d[ complete.cases(d$rgdppc_2000) , ]
+
+dd.trim <- dd[ , c("log_gdp","rugged","cont_africa") ]
+
+
+m8.1.stan <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dcauchy(0,2)
+) ,
+data=dd.trim )
+
+precis(m8.1.stan)
+plot(m8.1.stan)
+
+
+m8.1.unif <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dunif(0,10)
+) ,
+data=dd.trim )
+
+precis(m8.1.unif)
+plot(m8.1.unif)
+
+
+m8.1.exp <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dexp(1)
+) ,
+data=dd.trim )
+
+precis(m8.1.exp)
+plot(m8.1.exp)
+
+
+coeftab(m8.1.stan, m8.1.unif, m8.1.exp)
+compare(m8.1.stan, m8.1.unif, m8.1.exp)
+```
+
+So they're all pretty similar
+
+
+##8M2
+```{r}
+
+m8.1.cauch1 <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dcauchy(0,1)
+) ,
+data=dd.trim )
+
+precis(m8.1.cauch1)
+plot(m8.1.cauch1)
+
+
+m8.1.cauch.5 <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dcauchy(0,0.5)
+) ,
+data=dd.trim )
+
+precis(m8.1.cauch.5)
+plot(m8.1.cauch.5)
+
+m8.1.cauch.1 <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dcauchy(0,0.1)
+) ,
+data=dd.trim )
+
+precis(m8.1.cauch.1)
+plot(m8.1.cauch.1)
+
+
+m8.1.exp.5 <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dexp(0.5)
+) ,
+data=dd.trim )
+
+precis(m8.1.exp.5)
+plot(m8.1.exp.5)
+
+
+m8.1.exp.1 <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dexp(0.1)
+) ,
+data=dd.trim )
+
+precis(m8.1.exp.1)
+plot(m8.1.exp.1)
+
+
+coeftab(m8.1.stan, m8.1.cauch1, m8.1.cauch.5, m8.1.cauch.1)
+coeftab(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
+
+
+compare(m8.1.stan, m8.1.cauch1, m8.1.cauch.5, m8.1.cauch.1)
+compare(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
+
+```
+
+There really doesn't seem to be much effect here
+
+###8M3
+```{r}
+m8.1.w2500 <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dcauchy(0,2)
+) ,
+data=dd.trim, iter=4500, warmup=2500) #default is 1000
+
+precis(m8.1.w2500)
+
+
+m8.1.w25 <- map2stan(
+alist(
+log_gdp ~ dnorm( mu , sigma ) ,
+mu <- a + bR*rugged + bA*cont_africa + bAR*rugged*cont_africa ,
+a ~ dnorm(0,100),
+bR ~ dnorm(0,10),
+bA ~ dnorm(0,10),
+bAR ~ dnorm(0,10),
+sigma ~ dcauchy(0,2)
+) ,
+data=dd.trim, iter=1025,warmup=25) #default is 1000
+
+precis(m8.1.w25)
+
+coeftab(m8.1.w25, m8.1.stan, m8.1.w2500)
+compare(m8.1.w25, m8.1.stan, m8.1.w2500)
+
+plot(m8.1.stan)
+plot(m8.1.w2500)
+plot(m8.1.w25)
+
+```
+
+So 25 is clearly not enough, but 2500 isn't that much better than 1000.
