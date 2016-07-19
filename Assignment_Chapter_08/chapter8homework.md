@@ -33,36 +33,6 @@ Not sure how to sketch here, but the trace plot should be relatively uniform and
 
 
 ```r
-library(rethinking)
-```
-
-```
-## Loading required package: rstan
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```
-## rstan (Version 2.9.0-3, packaged: 2016-02-11 15:54:41 UTC, GitRev: 05c3d0058b6a)
-```
-
-```
-## For execution on a local, multicore CPU with excess RAM we recommend calling
-## rstan_options(auto_write = TRUE)
-## options(mc.cores = parallel::detectCores())
-```
-
-```
-## Loading required package: parallel
-```
-
-```
-## rethinking (Version 1.58)
-```
-
-```r
 data(rugged)
 d <- rugged
 d$log_gdp <- log(d$rgdppc_2000)
@@ -100,17 +70,17 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.167238 seconds (Warm-up)
-## #                0.161796 seconds (Sampling)
-## #                0.329034 seconds (Total)
+## #  Elapsed Time: 0.185102 seconds (Warm-up)
+## #                0.14421 seconds (Sampling)
+## #                0.329312 seconds (Total)
 ## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
-## #  Elapsed Time: 3e-06 seconds (Warm-up)
-## #                7.5e-05 seconds (Sampling)
-## #                7.8e-05 seconds (Total)
+## #  Elapsed Time: 1e-06 seconds (Warm-up)
+## #                5.3e-05 seconds (Sampling)
+## #                5.4e-05 seconds (Total)
 ## #
 ```
 
@@ -141,11 +111,11 @@ precis(m8.1.stan)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.23   0.14       8.99       9.45   238    1
-## bR    -0.21   0.08      -0.34      -0.09   241    1
-## bA    -1.96   0.23      -2.34      -1.61   219    1
-## bAR    0.40   0.14       0.21       0.63   244    1
-## sigma  0.95   0.05       0.86       1.02   409    1
+## a      9.21   0.14       9.01       9.44   313    1
+## bR    -0.20   0.08      -0.34      -0.09   296    1
+## bA    -1.93   0.22      -2.30      -1.59   342    1
+## bAR    0.39   0.13       0.19       0.61   364    1
+## sigma  0.95   0.05       0.86       1.03   453    1
 ```
 
 ```r
@@ -181,9 +151,9 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.136721 seconds (Warm-up)
-## #                0.144161 seconds (Sampling)
-## #                0.280882 seconds (Total)
+## #  Elapsed Time: 0.148716 seconds (Warm-up)
+## #                0.126967 seconds (Sampling)
+## #                0.275683 seconds (Total)
 ## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
@@ -219,11 +189,11 @@ precis(m8.1.unif)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.22   0.14       9.00       9.44   283 1.00
-## bR    -0.20   0.08      -0.31      -0.08   288 1.00
-## bA    -1.95   0.23      -2.31      -1.57   247 1.00
-## bAR    0.39   0.13       0.19       0.60   302 1.00
-## sigma  0.95   0.06       0.87       1.04   345 1.01
+## a      9.23   0.14       9.02       9.44   204    1
+## bR    -0.21   0.08      -0.32      -0.08   189    1
+## bA    -1.95   0.23      -2.35      -1.60   303    1
+## bAR    0.40   0.13       0.18       0.60   307    1
+## sigma  0.95   0.05       0.87       1.04   453    1
 ```
 
 ```r
@@ -262,49 +232,22 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.145764 seconds (Warm-up)
-## #                0.144722 seconds (Sampling)
-## #                0.290486 seconds (Total)
-## #
-```
-
-```
-## The following numerical problems occured the indicated number of times after warmup on chain 1
-```
-
-```
-##                                                                                 count
-## Exception thrown at line 24: normal_log: Scale parameter is 0, but must be > 0!     2
-```
-
-```
-## When a numerical problem occurs, the Metropolis proposal gets rejected.
-```
-
-```
-## However, by design Metropolis proposals sometimes get rejected even when there are no numerical problems.
-```
-
-```
-## Thus, if the number in the 'count' column is small, do not ask about this message on stan-users.
-```
-
-```
+## #  Elapsed Time: 0.135744 seconds (Warm-up)
+## #                0.141079 seconds (Sampling)
+## #                0.276823 seconds (Total)
+## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
 ## #  Elapsed Time: 1e-06 seconds (Warm-up)
-## #                4.7e-05 seconds (Sampling)
-## #                4.8e-05 seconds (Total)
+## #                5.4e-05 seconds (Sampling)
+## #                5.5e-05 seconds (Total)
 ## #
 ```
 
 ```
 ## Computing WAIC
-```
-
-```
 ## Constructing posterior predictions
 ```
 
@@ -327,11 +270,11 @@ precis(m8.1.exp)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.23   0.14       9.00       9.44   222    1
-## bR    -0.21   0.08      -0.33      -0.09   228    1
-## bA    -1.96   0.22      -2.33      -1.63   288    1
-## bAR    0.40   0.13       0.23       0.61   271    1
-## sigma  0.95   0.05       0.87       1.04   404    1
+## a      9.23   0.15       8.98       9.45   277    1
+## bR    -0.20   0.08      -0.34      -0.08   313    1
+## bA    -1.96   0.24      -2.33      -1.60   257    1
+## bAR    0.39   0.14       0.15       0.59   255    1
+## sigma  0.95   0.06       0.86       1.03   461    1
 ```
 
 ```r
@@ -346,10 +289,10 @@ coeftab(m8.1.stan, m8.1.unif, m8.1.exp)
 
 ```
 ##       m8.1.stan m8.1.unif m8.1.exp
-## a        9.23      9.22      9.23 
-## bR      -0.21     -0.20     -0.21 
-## bA      -1.96     -1.95     -1.96 
-## bAR      0.40      0.39      0.40 
+## a        9.21      9.23      9.23 
+## bR      -0.20     -0.21     -0.20 
+## bA      -1.93     -1.95     -1.96 
+## bAR      0.39      0.40      0.39 
 ## sigma    0.95      0.95      0.95 
 ## nobs      170       170       170
 ```
@@ -360,9 +303,9 @@ compare(m8.1.stan, m8.1.unif, m8.1.exp)
 
 ```
 ##            WAIC pWAIC dWAIC weight    SE  dSE
-## m8.1.exp  468.9   4.9   0.0   0.38 14.82   NA
-## m8.1.stan 469.2   5.1   0.3   0.33 14.88 0.25
-## m8.1.unif 469.4   5.2   0.5   0.29 14.83 0.57
+## m8.1.unif 469.3   5.1   0.0   0.36 14.75   NA
+## m8.1.stan 469.3   5.2   0.1   0.35 14.79 0.32
+## m8.1.exp  469.7   5.3   0.5   0.29 14.91 0.38
 ```
 
 ![](chapter8homework_files/figure-html/unnamed-chunk-2-3.png)<!-- -->
@@ -402,17 +345,17 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.177383 seconds (Warm-up)
-## #                0.152494 seconds (Sampling)
-## #                0.329877 seconds (Total)
+## #  Elapsed Time: 0.150911 seconds (Warm-up)
+## #                0.137801 seconds (Sampling)
+## #                0.288712 seconds (Total)
 ## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
-## #  Elapsed Time: 2e-06 seconds (Warm-up)
-## #                5e-05 seconds (Sampling)
-## #                5.2e-05 seconds (Total)
+## #  Elapsed Time: 1e-06 seconds (Warm-up)
+## #                7.6e-05 seconds (Sampling)
+## #                7.7e-05 seconds (Total)
 ## #
 ```
 
@@ -443,11 +386,11 @@ precis(m8.1.cauch1)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.23   0.13       9.00       9.43   342 1.01
-## bR    -0.21   0.07      -0.33      -0.10   325 1.01
-## bA    -1.95   0.23      -2.30      -1.57   290 1.02
-## bAR    0.39   0.13       0.18       0.60   305 1.02
-## sigma  0.95   0.05       0.87       1.03   422 1.00
+## a      9.23   0.14       9.00       9.44   307 1.01
+## bR    -0.21   0.08      -0.33      -0.09   298 1.01
+## bA    -1.96   0.21      -2.28      -1.62   306 1.00
+## bAR    0.40   0.13       0.20       0.60   297 1.00
+## sigma  0.95   0.05       0.87       1.03   449 1.00
 ```
 
 ```r
@@ -483,10 +426,34 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.142922 seconds (Warm-up)
-## #                0.130665 seconds (Sampling)
-## #                0.273587 seconds (Total)
-## # 
+## #  Elapsed Time: 0.146973 seconds (Warm-up)
+## #                0.126129 seconds (Sampling)
+## #                0.273102 seconds (Total)
+## #
+```
+
+```
+## The following numerical problems occured the indicated number of times after warmup on chain 1
+```
+
+```
+##                                                                                 count
+## Exception thrown at line 24: normal_log: Scale parameter is 0, but must be > 0!     1
+```
+
+```
+## When a numerical problem occurs, the Metropolis proposal gets rejected.
+```
+
+```
+## However, by design Metropolis proposals sometimes get rejected even when there are no numerical problems.
+```
+
+```
+## Thus, if the number in the 'count' column is small, do not ask about this message on stan-users.
+```
+
+```
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
@@ -499,6 +466,9 @@ data=dd.trim )
 
 ```
 ## Computing WAIC
+```
+
+```
 ## Constructing posterior predictions
 ```
 
@@ -521,11 +491,11 @@ precis(m8.1.cauch.5)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.21   0.14       8.99       9.42   118 1.01
-## bR    -0.19   0.08      -0.32      -0.06   155 1.01
-## bA    -1.94   0.24      -2.36      -1.58   119 1.01
-## bAR    0.39   0.14       0.18       0.61   164 1.01
-## sigma  0.94   0.05       0.88       1.04   424 1.00
+## a      9.22   0.14       8.97       9.42   247    1
+## bR    -0.20   0.08      -0.33      -0.08   224    1
+## bA    -1.95   0.24      -2.31      -1.58   262    1
+## bAR    0.39   0.13       0.20       0.59   351    1
+## sigma  0.95   0.06       0.86       1.04   479    1
 ```
 
 ```r
@@ -564,17 +534,17 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.134116 seconds (Warm-up)
-## #                0.120302 seconds (Sampling)
-## #                0.254418 seconds (Total)
+## #  Elapsed Time: 0.159707 seconds (Warm-up)
+## #                0.128373 seconds (Sampling)
+## #                0.28808 seconds (Total)
 ## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
-## #  Elapsed Time: 2e-06 seconds (Warm-up)
-## #                4.6e-05 seconds (Sampling)
-## #                4.8e-05 seconds (Total)
+## #  Elapsed Time: 1e-06 seconds (Warm-up)
+## #                4.9e-05 seconds (Sampling)
+## #                5e-05 seconds (Total)
 ## #
 ```
 
@@ -602,11 +572,11 @@ precis(m8.1.cauch.1)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.22   0.14       9.00       9.43   217    1
-## bR    -0.20   0.08      -0.33      -0.09   244    1
-## bA    -1.95   0.23      -2.31      -1.59   270    1
-## bAR    0.39   0.13       0.16       0.59   297    1
-## sigma  0.94   0.05       0.87       1.03   444    1
+## a      9.23   0.14       9.02       9.45   322 1.01
+## bR    -0.20   0.08      -0.32      -0.07   326 1.01
+## bA    -1.96   0.24      -2.31      -1.58   300 1.00
+## bAR    0.40   0.14       0.20       0.63   298 1.01
+## sigma  0.94   0.05       0.86       1.02   380 1.00
 ```
 
 ```r
@@ -645,49 +615,22 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.150752 seconds (Warm-up)
-## #                0.116585 seconds (Sampling)
-## #                0.267337 seconds (Total)
-## #
-```
-
-```
-## The following numerical problems occured the indicated number of times after warmup on chain 1
-```
-
-```
-##                                                                                 count
-## Exception thrown at line 24: normal_log: Scale parameter is 0, but must be > 0!     2
-```
-
-```
-## When a numerical problem occurs, the Metropolis proposal gets rejected.
-```
-
-```
-## However, by design Metropolis proposals sometimes get rejected even when there are no numerical problems.
-```
-
-```
-## Thus, if the number in the 'count' column is small, do not ask about this message on stan-users.
-```
-
-```
+## #  Elapsed Time: 0.179089 seconds (Warm-up)
+## #                0.106903 seconds (Sampling)
+## #                0.285992 seconds (Total)
+## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
 ## #  Elapsed Time: 2e-06 seconds (Warm-up)
-## #                5.3e-05 seconds (Sampling)
-## #                5.5e-05 seconds (Total)
+## #                4.7e-05 seconds (Sampling)
+## #                4.9e-05 seconds (Total)
 ## #
 ```
 
 ```
 ## Computing WAIC
-```
-
-```
 ## Constructing posterior predictions
 ```
 
@@ -710,11 +653,11 @@ precis(m8.1.exp.5)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.22   0.14       9.00       9.44   179 1.01
-## bR    -0.20   0.08      -0.32      -0.07   162 1.02
-## bA    -1.94   0.24      -2.31      -1.55   230 1.00
-## bAR    0.39   0.13       0.19       0.62   215 1.01
-## sigma  0.95   0.06       0.86       1.04   524 1.00
+## a      9.22   0.13       9.02       9.39   396 1.00
+## bR    -0.21   0.07      -0.31      -0.09   333 1.00
+## bA    -1.96   0.22      -2.31      -1.60   384 1.01
+## bAR    0.40   0.13       0.21       0.62   361 1.00
+## sigma  0.95   0.06       0.86       1.04   618 1.00
 ```
 
 ```r
@@ -753,9 +696,9 @@ data=dd.trim )
 ## Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 ## Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.190569 seconds (Warm-up)
-## #                0.140305 seconds (Sampling)
-## #                0.330874 seconds (Total)
+## #  Elapsed Time: 0.150539 seconds (Warm-up)
+## #                0.152434 seconds (Sampling)
+## #                0.302973 seconds (Total)
 ## #
 ```
 
@@ -765,7 +708,7 @@ data=dd.trim )
 
 ```
 ##                                                                                 count
-## Exception thrown at line 24: normal_log: Scale parameter is 0, but must be > 0!     2
+## Exception thrown at line 24: normal_log: Scale parameter is 0, but must be > 0!     1
 ```
 
 ```
@@ -786,8 +729,8 @@ data=dd.trim )
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
 ## #  Elapsed Time: 2e-06 seconds (Warm-up)
-## #                4.6e-05 seconds (Sampling)
-## #                4.8e-05 seconds (Total)
+## #                4.8e-05 seconds (Sampling)
+## #                5e-05 seconds (Total)
 ## #
 ```
 
@@ -818,11 +761,11 @@ precis(m8.1.exp.1)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.22   0.14       8.99       9.44   227 1.01
-## bR    -0.21   0.08      -0.33      -0.08   252 1.01
-## bA    -1.96   0.23      -2.33      -1.61   288 1.00
-## bAR    0.40   0.14       0.19       0.61   280 1.01
-## sigma  0.95   0.05       0.87       1.03   359 1.00
+## a      9.22   0.14       9.00       9.44   333 1.01
+## bR    -0.20   0.08      -0.32      -0.08   311 1.01
+## bA    -1.94   0.21      -2.26      -1.59   375 1.01
+## bAR    0.39   0.13       0.18       0.58   310 1.01
+## sigma  0.95   0.05       0.86       1.02   498 1.00
 ```
 
 ```r
@@ -837,11 +780,11 @@ coeftab(m8.1.stan, m8.1.cauch1, m8.1.cauch.5, m8.1.cauch.1)
 
 ```
 ##       m8.1.stan m8.1.cauch1 m8.1.cauch.5 m8.1.cauch.1
-## a        9.23      9.23        9.21         9.22     
-## bR      -0.21     -0.21       -0.19        -0.20     
-## bA      -1.96     -1.95       -1.94        -1.95     
-## bAR      0.40      0.39        0.39         0.39     
-## sigma    0.95      0.95        0.94         0.94     
+## a        9.21      9.23        9.22         9.23     
+## bR      -0.20     -0.21       -0.20        -0.20     
+## bA      -1.93     -1.96       -1.95        -1.96     
+## bAR      0.39      0.40        0.39         0.40     
+## sigma    0.95      0.95        0.95         0.94     
 ## nobs      170       170         170          170
 ```
 
@@ -852,9 +795,9 @@ coeftab(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
 ```
 ##       m8.1.exp m8.1.exp.5 m8.1.exp.1
 ## a        9.23     9.22       9.22   
-## bR      -0.21    -0.20      -0.21   
-## bA      -1.96    -1.94      -1.96   
-## bAR      0.40     0.39       0.40   
+## bR      -0.20    -0.21      -0.20   
+## bA      -1.96    -1.96      -1.94   
+## bAR      0.39     0.40       0.39   
 ## sigma    0.95     0.95       0.95   
 ## nobs      170      170        170
 ```
@@ -865,10 +808,10 @@ compare(m8.1.stan, m8.1.cauch1, m8.1.cauch.5, m8.1.cauch.1)
 
 ```
 ##               WAIC pWAIC dWAIC weight    SE  dSE
-## m8.1.cauch1  469.2   5.0   0.0   0.26 14.81   NA
-## m8.1.cauch.1 469.2   5.1   0.0   0.26 14.98 0.20
-## m8.1.stan    469.2   5.1   0.1   0.26 14.88 0.16
-## m8.1.cauch.5 469.6   5.3   0.4   0.22 14.95 0.51
+## m8.1.cauch1  468.7   4.9   0.0   0.34 14.91   NA
+## m8.1.stan    469.3   5.2   0.6   0.25 14.79 0.32
+## m8.1.cauch.1 469.5   5.3   0.8   0.23 15.03 0.24
+## m8.1.cauch.5 469.9   5.4   1.2   0.19 14.98 0.20
 ```
 
 ```r
@@ -877,12 +820,56 @@ compare(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
 
 ```
 ##             WAIC pWAIC dWAIC weight    SE  dSE
-## m8.1.exp   468.9   4.9   0.0   0.39 14.82   NA
-## m8.1.exp.5 469.2   5.0   0.3   0.34 14.80 0.47
-## m8.1.exp.1 469.7   5.3   0.7   0.27 14.84 0.43
+## m8.1.exp.1 468.6   4.8   0.0   0.41 14.77   NA
+## m8.1.exp.5 468.9   4.9   0.3   0.35 14.77 0.29
+## m8.1.exp   469.7   5.3   1.1   0.24 14.91 0.30
+```
+
+```r
+par(mfrow=c(2,2))
 ```
 
 ![](chapter8homework_files/figure-html/unnamed-chunk-3-5.png)<!-- -->
+
+```r
+cauchs = c(m8.1.stan, m8.1.cauch1, m8.1.cauch.5, m8.1.cauch.1) 
+sapply(cauchs, function(x){dens(extract.samples(x)$sigma, ylab="",xlab="", xlim = c(0.8, 1.2),ylim = c(0,12))})
+```
+
+![](chapter8homework_files/figure-html/unnamed-chunk-3-6.png)<!-- -->
+
+```
+## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL
+## 
+## [[4]]
+## NULL
+```
+
+```r
+par(mfrow=c(3,1))
+exps = c(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
+sapply(exps, function(x){dens(extract.samples(x)$sigma, ylab="",xlab="", ylim = c(0,10), xlim = c(0.8, 1.3))})
+```
+
+![](chapter8homework_files/figure-html/unnamed-chunk-3-7.png)<!-- -->
+
+```
+## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL
+```
 
 There really doesn't seem to be much effect here
 
@@ -918,17 +905,17 @@ data=dd.trim, iter=4500, warmup=2500) #default is 1000
 ## Chain 1, Iteration: 3850 / 4500 [ 85%]  (Sampling)
 ## Chain 1, Iteration: 4300 / 4500 [ 95%]  (Sampling)
 ## Chain 1, Iteration: 4500 / 4500 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.314525 seconds (Warm-up)
-## #                0.279545 seconds (Sampling)
-## #                0.59407 seconds (Total)
+## #  Elapsed Time: 0.36595 seconds (Warm-up)
+## #                0.258652 seconds (Sampling)
+## #                0.624602 seconds (Total)
 ## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
-## #  Elapsed Time: 1e-06 seconds (Warm-up)
-## #                4.7e-05 seconds (Sampling)
-## #                4.8e-05 seconds (Total)
+## #  Elapsed Time: 2e-06 seconds (Warm-up)
+## #                5.1e-05 seconds (Sampling)
+## #                5.3e-05 seconds (Total)
 ## #
 ```
 
@@ -959,11 +946,11 @@ precis(m8.1.w2500)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.22   0.13       9.01       9.43   782    1
-## bR    -0.20   0.07      -0.31      -0.07   628    1
-## bA    -1.94   0.22      -2.30      -1.60   659    1
-## bAR    0.39   0.13       0.19       0.60   587    1
-## sigma  0.95   0.05       0.87       1.03   845    1
+## a      9.22   0.14       9.00       9.46   592    1
+## bR    -0.20   0.08      -0.32      -0.07   626    1
+## bA    -1.95   0.23      -2.34      -1.61   554    1
+## bAR    0.39   0.13       0.19       0.61   610    1
+## sigma  0.95   0.05       0.87       1.04   945    1
 ```
 
 ```r
@@ -996,17 +983,17 @@ data=dd.trim, iter=1025,warmup=25) #default is 1000
 ## Chain 1, Iteration:  841 / 1025 [ 82%]  (Sampling)
 ## Chain 1, Iteration:  943 / 1025 [ 92%]  (Sampling)
 ## Chain 1, Iteration: 1025 / 1025 [100%]  (Sampling)# 
-## #  Elapsed Time: 0.013093 seconds (Warm-up)
-## #                0.107886 seconds (Sampling)
-## #                0.120979 seconds (Total)
+## #  Elapsed Time: 0.018451 seconds (Warm-up)
+## #                0.212803 seconds (Sampling)
+## #                0.231254 seconds (Total)
 ## # 
 ## 
 ## SAMPLING FOR MODEL 'log_gdp ~ dnorm(mu, sigma)' NOW (CHAIN 1).
 ## 
 ## Chain 1, Iteration: 1 / 1 [100%]  (Sampling)# 
-## #  Elapsed Time: 1e-06 seconds (Warm-up)
-## #                5.4e-05 seconds (Sampling)
-## #                5.5e-05 seconds (Total)
+## #  Elapsed Time: 2e-06 seconds (Warm-up)
+## #                9.3e-05 seconds (Sampling)
+## #                9.5e-05 seconds (Total)
 ## #
 ```
 
@@ -1034,11 +1021,11 @@ precis(m8.1.w25)
 
 ```
 ##        Mean StdDev lower 0.89 upper 0.89 n_eff Rhat
-## a      9.31   0.83       8.96       9.46    87 1.01
-## bR    -0.23   0.33      -0.32      -0.06    88 1.01
-## bA    -1.98   0.35      -2.37      -1.57    97 1.00
-## bAR    0.39   0.18       0.17       0.61   188 1.01
-## sigma  1.00   0.46       0.87       1.04    92 1.01
+## a      9.87   5.17       8.99       9.45    64 1.02
+## bR    -0.44   1.97      -0.33      -0.05    66 1.02
+## bA    -2.34   2.21      -2.31      -1.53    30 1.03
+## bAR    0.48   0.76       0.16       0.63    69 1.01
+## sigma  1.43   3.15       0.86       1.05    44 1.02
 ```
 
 ```r
@@ -1047,11 +1034,11 @@ coeftab(m8.1.w25, m8.1.stan, m8.1.w2500)
 
 ```
 ##       m8.1.w25 m8.1.stan m8.1.w2500
-## a        9.31     9.23      9.22   
-## bR      -0.23    -0.21     -0.20   
-## bA      -1.98    -1.96     -1.94   
-## bAR      0.39     0.40      0.39   
-## sigma    1.00     0.95      0.95   
+## a        9.87     9.21      9.22   
+## bR      -0.44    -0.20     -0.20   
+## bA      -2.34    -1.93     -1.95   
+## bAR      0.48     0.39      0.39   
+## sigma    1.43     0.95      0.95   
 ## nobs      170      170       170
 ```
 
@@ -1061,9 +1048,9 @@ compare(m8.1.w25, m8.1.stan, m8.1.w2500)
 
 ```
 ##             WAIC pWAIC dWAIC weight    SE  dSE
-## m8.1.w2500 468.9   4.9   0.0   0.54 14.78   NA
-## m8.1.stan  469.2   5.1   0.3   0.46 14.88 0.27
-## m8.1.w25   485.2  11.5  16.3   0.00 14.55 1.36
+## m8.1.stan  469.3   5.2   0.0   0.53 14.79   NA
+## m8.1.w2500 469.5   5.2   0.2   0.47 14.82 0.24
+## m8.1.w25   565.5  48.2  96.2   0.00 14.54 6.46
 ```
 
 ```r

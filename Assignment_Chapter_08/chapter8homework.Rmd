@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+library(rethinking)
 ```
 
 ```{r, eval=F, include=F}
@@ -76,7 +76,7 @@ Not sure how to sketch here, but the trace plot should be relatively uniform and
 ##8M1
 
 ```{r}
-library(rethinking)
+
 data(rugged)
 d <- rugged
 d$log_gdp <- log(d$rgdppc_2000)
@@ -228,6 +228,15 @@ coeftab(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
 
 compare(m8.1.stan, m8.1.cauch1, m8.1.cauch.5, m8.1.cauch.1)
 compare(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
+
+par(mfrow=c(2,2))
+cauchs = c(m8.1.stan, m8.1.cauch1, m8.1.cauch.5, m8.1.cauch.1) 
+sapply(cauchs, function(x){dens(extract.samples(x)$sigma, ylab="",xlab="", xlim = c(0.8, 1.2),ylim = c(0,12))})
+
+par(mfrow=c(3,1))
+exps = c(m8.1.exp, m8.1.exp.5, m8.1.exp.1)
+sapply(exps, function(x){dens(extract.samples(x)$sigma, ylab="",xlab="", ylim = c(0,10), xlim = c(0.8, 1.3))})
+
 
 ```
 
