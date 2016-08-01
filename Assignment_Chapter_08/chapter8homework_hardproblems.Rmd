@@ -24,4 +24,125 @@ data=list(y=1),
 start=list(a=0,b=0),
 iter=1e4, warmup=100 , WAIC=FALSE )
 
+
+par(mfrow=c(3,1), mar=c(3,3,1,1))
+hist(extract.samples(mp)$a, col = "darkgreen", border="white")
+hist(extract.samples(mp)$b, col = "darkgreen", border="white")
+hist(extract.samples(mp)$b, xlim = c(-4,4), breaks=10000, col = "darkgreen", border="white")
+
+plot(mp)
+
 ```
+
+A is sampled from the normal distribution and B is sampled from the couchy distribution. The normal distribution is pretty straightforward, with a mean of 0 and a standard deviation of 1 we can see that. However, the 0 and 1 in the cauchy correspond to the location and scale. The cauchy distribution has fat tails, which means that it's more likely that the chain will sample from somewhere really far away from the mean (-1000 in this case). When we zoom in on the distribution between -4 and 4, both look pretty similar.
+
+##8H2
+
+```{r}
+data(WaffleDivorce)
+d<-WaffleDivorce
+
+d$mam <- (d$MedianAgeMarriage-mean(d$MedianAgeMarriage))/sd(d$MedianAgeMarriage)
+d.trim <- d[,c('Divorce','mam')] 
+
+m5.1 <- map2stan(
+  alist(
+    Divorce~dnorm(mu,sigma),
+    mu <- a + bA*mam,
+    a ~ dnorm(10,10),
+    bA ~ dnorm(0,1),
+    sigma ~ dcauchy(0,2)),
+  data=d.trim
+     )
+
+d$marriage.s <- (d$Marriage - mean(d$Marriage))/sd(d$Marriage)
+dd = d[complete.cases(d$Marriage),]
+d.trim2 <- dd[,c('Divorce','marriage.s')]
+
+m5.2 <- map2stan(
+  alist(
+    Divorce~dnorm(mu,sigma),
+    mu <- a + bR*marriage.s,
+    a ~ dnorm(10,10),
+    bR ~ dnorm(0,1),
+    sigma ~ dcauchy(0,2)),
+  data=d.trim2
+     )
+
+d.trim3 = d[,c('Divorce','mam','marriage.s')]
+
+m5.3 <- map2stan(
+  alist(
+    Divorce~dnorm(mu,sigma),
+    mu <- a + bA*mam + bR*marriage.s,
+    a ~ dnorm(10,10),
+    bA ~ dnorm(0,1),
+    bR ~ dnorm(0,1),
+    sigma ~ dcauchy(0,2)),
+  data=d.trim
+     )
+
+compare(m5.1,m5.2,m5.3)
+```
+
+I guess this was good practice in using map2stan.
+
+##8H3##
+
+```{r}
+N <- 100
+height <- rnorm(N, 10,2)
+leg_prop <- runif(N,0.4,0.5)
+leg_left <- leg_prop*height + rnorm(N, 0, 0.02)
+leg_right <- leg_prop*height + rnorm(N, 0, 0.02)
+d <- data.frame(height, leg_left, leg_right)
+
+m5.8s <- map2stan(
+  alist(
+    height ~ dnorm(mu,sigma),
+    mu <- a + bl*leg_left + br*leg_right,
+    a ~ dnorm(10,100),
+    bl ~ dnorm(2,10),
+    br ~ dnorm(2,10),
+    sigma ~ dcauchy(0,1)
+  ),
+  data = d, chains=4,
+  start=list(a=10,bl=0,br=0,sigma=1))
+
+m5.8s2 <- map2stan(
+  alist(
+    height ~ dnorm(mu,sigma),
+    mu <- a + bl*leg_left + br*leg_right,
+    a ~ dnorm(10,100),
+    bl ~ dnorm(2,10),
+    br ~ dnorm(2,10) & T[0,],
+    sigma ~ dcauchy(0,1)
+  ),
+  data = d, chains=4,
+  start=list(a=10,bl=0,br=0,sigma=1))
+
+par(mfrow=c(2,2))
+hist(extract.samples(m5.8s)$br, col = "dodgerblue", border="white")
+hist(extract.samples(m5.8s)$bl, col = "dodgerblue", border="white")
+hist(extract.samples(m5.8s2)$br, col = "dodgerblue", border="white")
+hist(extract.samples(m5.8s2)$bl, col = "dodgerblue", border="white")
+
+
+plot(d$leg_left, d$leg_right)
+plot(d$leg_left, d$height)
+plot(extract.samples(m5.8s)$br,extract.samples(m5.8s)$bl)
+plot(extract.samples(m5.8s2)$br,extract.samples(m5.8s2)$bl)
+
+```
+
+Wierd. I think what's happening is that since both right and left leg length are correlated with height, over-estimating br requires underestimating b (if the right leg is having a bigger influence on height then the left leg must have a weaker influence on height). This creates a negative correlation between br and bl, forcing bl to be negative if we constrain br to be positive.
+
+##8H4##
+
+```{r}
+compare(m5.8s, m5.8s2)
+```
+
+Weird, both are pretty much equivalent. I think this means that the first model has more effective parameters since they're less constrained and more general.
+
+##8H5##

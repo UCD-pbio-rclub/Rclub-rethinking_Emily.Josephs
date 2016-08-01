@@ -1,0 +1,41 @@
+---
+title: "9.1"
+author: "em"
+date: "July 30, 2016"
+
+output:
+  html_document:
+    keep_md: yes
+---
+
+Do a Bayesian analysis of hypocotyl length (hyp) in the attached data sheet.
+
+1) Consider treatment effects (trt) species effects (species) and their interaction.  What is the best model given these possible predictors?
+
+-- I'm not sure how to deal with the categorical variables here.
+
+2) Use "S. chmielewskii" as the reference.  For each of the other species evaluate the hypothesis that their response to shade differs from S. chmielewskii.
+
+
+
+
+```{r}
+setwd("~/Documents/Rclub-rethinking_Emily.Josephs/Assignment_Chapter_09")
+d = read.csv('TomatoR2CSHL.csv', header=T)
+d$trtNum = sapply(d$trt, function(x){if(x == 'H'){return(1)} else {return(-1)}})
+d.trim = d[,c('trtNum','species','hyp')]
+library(rethinking)
+
+#m1 <- map2stan(
+#  alist(
+#    hyp~dnorm(mu,sigma),
+#    mu <- a + bT*trtNum + bS*species + bTS*trtNum*species,
+#    a ~ dnorm(10,10),
+#    bT ~ dnorm(0,1),
+#    bS ~ dnorm(0,1),
+#    bTS ~ dnorm(0,1),
+#    sigma ~ dcauchy(0,2)),
+#  data=d.trim
+#     )
+
+```
